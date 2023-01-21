@@ -18,7 +18,7 @@ trait LineChartSetters {
     private ?float $lockValueY = null;
 
     /** @var string[] */
-    private array $colors = ['#ED7D31', '#E41A5C'];
+    private array $colors = ['#fbd808', '#ff9005', '#f9530b', '#ff0000'];
 
     public function withDimensions(mixed $widthSvg = null, mixed $heightSvg = null): self {
         $clone = clone $this;
