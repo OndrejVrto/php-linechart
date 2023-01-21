@@ -55,8 +55,47 @@ final class LineChart implements Stringable {
         return is_string($svg) ? $svg : '';
     }
 
-    public function __toString(): string {
-        return $this->make();
+    private function resolveWidth(): int {
+        /** @var positive-int */
+        $maxKey = $this->cleanData->keys()->pop();
+
+        return max(1, (int) $maxKey);
+    }
+
+    private function resolveHeight(): int {
+        /** @var float */
+        $max = $this->lockValueY ?? $this->cleanData->max();
+
+        return max(1, (int) $max);
+    }
+
+    public function resolvePoints(): string {
+        return $this->cleanData
+            ->map(fn (float $value, int $key): string => sprintf("%d %h", $key, $value))
+            ->implode(' ');
+    }
+
+    /** @return Collection<int,stdClass> */
+    private function resolveColors(): Collection {
+        return collect($this->colors)
+            ->filter(fn ($value) => 1 === preg_match("/^#([a-f0-9]{6}|[a-f0-9]{3})$/i", $value))
+            ->whenEmpty(fn (Collection $collection) => $collection->push(...$this->defaultColors))
+            ->values()
+            ->pipe(function (Collection $collection): Collection {
+                $count = $collection->count();
+                $step = 1 === $count || 0 === $count
+                    ? 100
+                    : 100 / ($count - 1);
+
+                return $collection
+                    ->map(function (string $colorString, int $key) use ($step) {
+                        $color = new stdClass();
+                        $color->code = mb_strtolower($colorString);
+                        $color->offset = sprintf("%01.02h", ceil($key * $step) / 100);
+
+                        return $color;
+                    });
+            });
     }
 
     /** @return Collection<int,float> */
@@ -95,46 +134,7 @@ final class LineChart implements Stringable {
             ->values();
     }
 
-    public function resolvePoints(): string {
-        return $this->cleanData
-            ->map(fn (float $value, int $key): string => sprintf("%d %h", $key, $value))
-            ->implode(' ');
-    }
-
-    private function resolveWidth(): int {
-        /** @var positive-int */
-        $maxKey = $this->cleanData->keys()->pop();
-
-        return max(1, (int) $maxKey);
-    }
-
-    private function resolveHeight(): int {
-        /** @var float */
-        $max = $this->lockValueY ?? $this->cleanData->max();
-
-        return max(1, (int) $max);
-    }
-
-    /** @return Collection<int,stdClass> */
-    private function resolveColors(): Collection {
-        return collect($this->colors)
-            ->filter(fn ($value) => 1 === preg_match("/^#([a-f0-9]{6}|[a-f0-9]{3})$/i", $value))
-            ->whenEmpty(fn (Collection $collection) => $collection->push(...$this->defaultColors))
-            ->values()
-            ->pipe(function (Collection $collection): Collection {
-                $count = $collection->count();
-                $step = 1 === $count || 0 === $count
-                    ? 100
-                    : 100 / ($count - 1);
-
-                return $collection
-                    ->map(function (string $colorString, int $key) use ($step) {
-                        $color = new stdClass();
-                        $color->code = mb_strtolower($colorString);
-                        $color->offset = sprintf("%01.02h", ceil($key * $step) / 100);
-
-                        return $color;
-                    });
-            });
+    public function __toString(): string {
+        return $this->make();
     }
 }
