@@ -55,26 +55,14 @@ trait LineChartSetters {
     }
 
     private function positiveIntOrNull(mixed $value): ?int {
-        $value = match (true) {
-            is_int($value) => $value,
-            is_bool($value) => (int) $value,
-            is_numeric($value) => (int) $value,
-            (is_string($value) && ctype_digit($value)) => (int) $value,
-            default => 0,
-        };
-
-        return abs($value) > 0 ? abs($value) : null;
+        return is_numeric($value) || is_bool($value) || (is_string($value) && ctype_digit($value))
+            ? (int) abs((int) $value)
+            : null;
     }
 
-    private function positiveFloatOrNull(mixed $value): ?int {
-        $value = match (true) {
-            is_int($value) => (float) $value,
-            is_bool($value) => (float) $value,
-            is_numeric($value) => (float) $value,
-            (is_string($value) && ctype_digit($value)) => (float) $value,
-            default => 0,
-        };
-
-        return abs($value) > 0 ? abs($value) : null;
+    private function positiveFloatOrNull(mixed $value): ?float {
+        return is_numeric($value) || is_bool($value) || (is_string($value) && ctype_digit($value))
+            ? (float) abs((float) $value)
+            : null;
     }
 }
