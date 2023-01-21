@@ -20,18 +20,18 @@ composer require ondrej-vrto/linechart
 $data = WebVisits::query()
 	->select(['day_visit'])
 	->whereMorphedTo('visitable', $model)
-	->orderByDesc('created_at')
+	->orderByDesc('date')
 	->limit(365)
 	->get();
 // or
 $data = [5, 4, 8, 8, 7, 8, 10, 4, 7, 0];
 
 $lineChartSVG = LineChart::new($data)
-	->withColors('#4285F4', '#31ACF2', '#2BC9F4')
     ->withStrokeWidth(2)
-    ->withDimensions(500, 100)
+	->withOrderReversed()
     ->withMaxItemAmount(100)
-    ->withMaxValue(20);
+    ->withDimensions(500, 100)
+	->withColorGradient('#4285F4', '#31ACF2', '#2BC9F4')
 	->make();
 ```
 
