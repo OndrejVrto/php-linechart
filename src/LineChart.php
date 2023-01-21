@@ -27,7 +27,7 @@ final class LineChart implements Stringable {
 
     public function make(): string {
         $this->cleanInputData();
-// dd( $this->cleanData);
+
         $widthRaw = $this->resolveWidth();
         $heightRaw = $this->resolveHeight();
 
@@ -79,7 +79,7 @@ final class LineChart implements Stringable {
                 return (float) $value;
             })
             ->when(
-                $this->reverseOrder,
+                true === $this->reverseOrder,
                 fn ($collection) => $collection->reverse()
             )
             ->unless(
