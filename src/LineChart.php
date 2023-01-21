@@ -108,7 +108,8 @@ final class LineChart implements Stringable {
 
     private function resolveHeight(): int {
         /** @var float */
-        $max = $this->cleanData->max();
+        $max = $this->lockValueY ?? $this->cleanData->max();
+
         return max(1, (int) $max);
     }
 

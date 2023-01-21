@@ -15,6 +15,8 @@ trait LineChartSetters {
 
     private ?int $maxItemAmount = null;
 
+    private ?float $lockValueY = null;
+
     /** @var string[] */
     private array $colors = ['#ED7D31', '#E41A5C'];
 
@@ -29,6 +31,13 @@ trait LineChartSetters {
     public function withStrokeWidth(mixed $strokeWidth = null): self {
         $clone = clone $this;
         $clone->strokeWidth = $this->positiveFloatOrNull($strokeWidth) ?? $clone->strokeWidth;
+
+        return $clone;
+    }
+
+    public function withLockYAxisRange(mixed $lockValueY = null): self {
+        $clone = clone $this;
+        $clone->lockValueY = $this->positiveFloatOrNull($lockValueY) ?? $clone->lockValueY;
 
         return $clone;
     }
