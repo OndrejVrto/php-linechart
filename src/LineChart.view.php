@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 <?= $widthSVG ?> <?= $heightSVG ?>" width="<?= $widthSVG ?>" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 <?= $widthSvg ?> <?= $heightSvg ?>" width="<?= $widthSvg ?>" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <linearGradient x2="0" y1="1" id="color-<?= $id ?>">
 <?php foreach ($colors as $color): ?>
@@ -21,8 +21,8 @@
     </defs>
     <g>
         <rect
-            width="<?= $widthSVG ?>"
-            height="<?= $heightSVG ?>"
+            width="<?= $widthSvg ?>"
+            height="<?= $heightSvg ?>"
             fill="url(#color-<?= $id ?>)"
             mask="url(#linechart-<?= $id ?>)"
         />
