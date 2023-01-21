@@ -2,13 +2,13 @@
 <svg viewBox="0 0 <?= $widthSVG ?> <?= $heightSVG ?>" width="<?= $widthSVG ?>" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <linearGradient x2="0" y1="1" id="color-<?= $id ?>">
-<?php foreach ($colors as $percentage => $color): ?>
-            <stop stop-color="<?= $color ?>" offset="<?= sprintf("%01.02h", $percentage/100) ?>"></stop>
+<?php foreach ($colors as $color): ?>
+            <stop stop-color="<?= $color->code ?>" offset="<?= $color->offset ?>"></stop>
 <?php endforeach ?>
         </linearGradient>
         <mask id="linechart-<?= $id ?>">
             <polyline
-                stroke="<?= $colors[0] ?>"
+                stroke="#fff"
                 stroke-width="<?= $strokeWidth ?>"
                 fill="transparent"
                 stroke-linecap="round"

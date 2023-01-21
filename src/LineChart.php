@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OndrejVrto\LineChart;
 
+use stdClass;
 use Stringable;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Collection;
@@ -117,16 +118,30 @@ final class LineChart implements Stringable {
         return max(1, (int) $max);
     }
 
-    /** @return string[] */
-    private function resolveColors(): array {
-        $percentageStep = 100 / (count($this->colors) - 1);
+    /** @return Collection<int,stdClass> */
+    private function resolveColors(): Collection {
+        $tmp = collect($this->colors)
+            ->filter(fn ($value) => 1 === preg_match("/^#([a-f0-9]{6}|[a-f0-9]{3})$/i", $value));
 
-        $colorsWithPercentage = [];
-        foreach ($this->colors as $key => $color) {
-            $newKey = ceil($key * $percentageStep);
-            $colorsWithPercentage[$newKey] = mb_strtolower($color);
+        $count = $tmp->count();
+
+        if (0 === $count) {
+            $tmp = collect(['#fbd808', '#ff9005', '#f9530b', '#ff0000']);
+            $count = 4;
         }
 
-        return $colorsWithPercentage;
+        $step = 1 === $count
+            ? 100
+            : 100 / ($count - 1);
+
+        return $tmp
+            ->values()
+            ->map(function (string $colorString, int $key) use ($step) {
+                $color = new stdClass();
+                $color->code = mb_strtolower($colorString);
+                $color->offset = sprintf("%01.02h", ceil($key * $step) / 100);
+
+                return $color;
+            });
     }
 }

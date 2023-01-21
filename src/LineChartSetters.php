@@ -56,9 +56,9 @@ trait LineChartSetters {
         return $clone;
     }
 
-    public function withColorGradient(string ...$colors): self {
+    public function withColorGradient(string ...$colorsInHex): self {
         $clone = clone $this;
-        $clone->colors = $colors;
+        $clone->colors = $colorsInHex;
 
         return $clone;
     }
