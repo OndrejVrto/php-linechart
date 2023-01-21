@@ -27,7 +27,7 @@ final class LineChart implements Stringable {
     }
 
     public function make(): string {
-        $this->cleanInputData();
+        $this->cleanData = $this->cleanInputData();
 
         $widthRaw = $this->resolveWidth();
         $heightRaw = $this->resolveHeight();
@@ -59,43 +59,39 @@ final class LineChart implements Stringable {
         return $this->make();
     }
 
-    private function cleanInputData(): void {
-        $tmp = collect($this->data)
+    /** @return Collection<int,float> */
+    private function cleanInputData(): Collection {
+        return collect($this->data)
             ->flatten()
-            ->filter(fn ($value) => is_numeric($value) || (is_string($value) && ctype_digit($value)) || is_bool($value));
-
-        $count = $tmp->count();
-
-        $tmp = $tmp
-            ->when(
-                0 === $count,
-                fn ($collection) => $collection->push(0, 0)
-            )
-            ->when(
-                1 === $count,
-                fn ($collection) => $collection->prepend(0)
-            )
+            ->filter(fn ($value) => is_numeric($value) || (is_string($value) && ctype_digit($value)) || is_bool($value))
+            ->whenEmpty(fn (Collection $collection) => $collection->push(0, 0))
+            ->pipe(function (Collection $collection): Collection {
+                return $collection->when(
+                    1 === $collection->count(),
+                    fn (Collection $collection): Collection => $collection->prepend(0)
+                );
+            })
             ->map(function ($value): float {
                 /** @var int|float|bool|numeric-string $value */
                 return (float) $value;
             })
             ->when(
                 true === $this->reverseOrder,
-                fn ($collection) => $collection->reverse()
+                fn (Collection $collection): Collection => $collection->reverse()
             )
             ->unless(
                 null === $this->maxItemAmount,
-                fn ($collection) => $collection->shift($this->maxItemAmount)
-            );
-
-        /** @var float */
-        $min = $tmp->min();
-
-        $this->cleanData = $tmp
-            ->when(
-                $min < 0,
-                fn ($collection) => $collection->map(fn ($value) => $value - $min)
+                fn (Collection $collection): Collection => $collection->shift($this->maxItemAmount)
             )
+            ->pipe(function (Collection $collection): Collection {
+                /** @var float */
+                $min = $collection->min();
+
+                return $collection->when(
+                    $min < 0,
+                    fn (Collection $collection): Collection => $collection->map(fn ($value) => $value - $min)
+                );
+            })
             ->values();
     }
 
@@ -108,6 +104,7 @@ final class LineChart implements Stringable {
     private function resolveWidth(): int {
         /** @var positive-int */
         $maxKey = $this->cleanData->keys()->pop();
+
         return max(1, (int) $maxKey);
     }
 
@@ -120,26 +117,24 @@ final class LineChart implements Stringable {
 
     /** @return Collection<int,stdClass> */
     private function resolveColors(): Collection {
-        $tmp = collect($this->colors)
-            ->filter(fn ($value) => 1 === preg_match("/^#([a-f0-9]{6}|[a-f0-9]{3})$/i", $value));
-
-        if (0 === $tmp->count()) {
-            $tmp = collect($this->defaultColors);
-        }
-
-        $count = $tmp->count();
-        $step = 1 === $count
-            ? 100
-            : 100 / ($count - 1);
-
-        return $tmp
+        return collect($this->colors)
+            ->filter(fn ($value) => 1 === preg_match("/^#([a-f0-9]{6}|[a-f0-9]{3})$/i", $value))
+            ->whenEmpty(fn (Collection $collection) => $collection->push(...$this->defaultColors))
             ->values()
-            ->map(function (string $colorString, int $key) use ($step) {
-                $color = new stdClass();
-                $color->code = mb_strtolower($colorString);
-                $color->offset = sprintf("%01.02h", ceil($key * $step) / 100);
+            ->pipe(function (Collection $collection): Collection {
+                $count = $collection->count();
+                $step = 1 === $count || 0 === $count
+                    ? 100
+                    : 100 / ($count - 1);
 
-                return $color;
+                return $collection
+                    ->map(function (string $colorString, int $key) use ($step) {
+                        $color = new stdClass();
+                        $color->code = mb_strtolower($colorString);
+                        $color->offset = sprintf("%01.02h", ceil($key * $step) / 100);
+
+                        return $color;
+                    });
             });
     }
 }
