@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OndrejVrto\LineChart;
 
-use Exception;
 use Stringable;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Collection;
@@ -64,12 +63,17 @@ final class LineChart implements Stringable {
             ->flatten()
             ->filter(fn ($value) => is_numeric($value) || (is_string($value) && ctype_digit($value)) || is_bool($value));
 
-        if (0 === $tmp->count()) {
-            throw new Exception('Bad input data.');
-        }
+        $count = $tmp->count();
 
-        /** @var Collection<float> */
         $tmp = $tmp
+            ->when(
+                0 === $count,
+                fn ($collection) => $collection->push(0, 0)
+            )
+            ->when(
+                1 === $count,
+                fn ($collection) => $collection->prepend(0)
+            )
             ->map(function ($value): float {
                 /** @var int|float|bool|numeric-string $value */
                 return (float) $value;
