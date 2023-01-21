@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 final class LineChart implements Stringable {
     use LineChartSetters;
 
+    /** @var Collection<int,float> */
     private Collection $cleanData;
 
     /** @param array<mixed> $data */
@@ -27,7 +28,7 @@ final class LineChart implements Stringable {
 
     public function make(): string {
         $this->cleanInputData();
-
+// dd( $this->cleanData);
         $widthRaw = $this->resolveWidth();
         $heightRaw = $this->resolveHeight();
 
@@ -67,8 +68,12 @@ final class LineChart implements Stringable {
             throw new Exception('Bad input data.');
         }
 
+        /** @var Collection<float> */
         $tmp = $tmp
-            ->map(fn ($value) => (float) $value)
+            ->map(function ($value): float {
+                /** @var int|float|bool|numeric-string $value */
+                return (float) $value;
+            })
             ->when(
                 $this->reverseOrder,
                 fn ($collection) => $collection->reverse()
@@ -78,6 +83,7 @@ final class LineChart implements Stringable {
                 fn ($collection) => $collection->shift($this->maxItemAmount)
             );
 
+        /** @var float */
         $min = $tmp->min();
 
         $this->cleanData = $tmp
@@ -90,16 +96,20 @@ final class LineChart implements Stringable {
 
     public function resolvePoints(): string {
         return $this->cleanData
-            ->map(fn (float $value, int $key) => sprintf("%d %h", $key, $value))
+            ->map(fn (float $value, int $key): string => sprintf("%d %h", $key, $value))
             ->implode(' ');
     }
 
     private function resolveWidth(): int {
-        return max(1, (int) $this->cleanData->keys()->pop());
+        /** @var positive-int */
+        $maxKey = $this->cleanData->keys()->pop();
+        return max(1, (int) $maxKey);
     }
 
     private function resolveHeight(): int {
-        return max(1, (int) ceil($this->cleanData->max()));
+        /** @var float */
+        $max = $this->cleanData->max();
+        return max(1, (int) $max);
     }
 
     /** @return string[] */

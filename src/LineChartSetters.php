@@ -15,6 +15,7 @@ trait LineChartSetters {
 
     private ?int $maxItemAmount = null;
 
+    /** @var string[] */
     private array $colors = ['#ED7D31', '#E41A5C'];
 
     public function withDimensions(?int $widthSvg = null, ?int $heightSvg = null): self {
