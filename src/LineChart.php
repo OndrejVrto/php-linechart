@@ -123,13 +123,11 @@ final class LineChart implements Stringable {
         $tmp = collect($this->colors)
             ->filter(fn ($value) => 1 === preg_match("/^#([a-f0-9]{6}|[a-f0-9]{3})$/i", $value));
 
-        $count = $tmp->count();
-
-        if (0 === $count) {
-            $tmp = collect(['#fbd808', '#ff9005', '#f9530b', '#ff0000']);
-            $count = 4;
+        if (0 === $tmp->count()) {
+            $tmp = collect($this->defaultColors);
         }
 
+        $count = $tmp->count();
         $step = 1 === $count
             ? 100
             : 100 / ($count - 1);
