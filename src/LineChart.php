@@ -116,7 +116,7 @@ final class LineChart implements Stringable {
         $tmp = collect($this->data)
             ->flatten()
             ->map(function (mixed $value): int|float|null {
-                return match(true){
+                return match (true) {
                     is_int($value) => (int) $value,
                     is_bool($value) => (int) $value,
                     is_numeric($value) => (float) $value,
@@ -134,7 +134,7 @@ final class LineChart implements Stringable {
                 fn (Collection $collection): Collection => $collection->take($this->maxItemAmount ?? $collection->count())
             )
             ->whenEmpty(fn (Collection $collection) => $collection->push(0, 0))
-            ->pipe(fn(Collection $collection): Collection => $collection->when(
+            ->pipe(fn (Collection $collection): Collection => $collection->when(
                 1 === $collection->count(),
                 fn (Collection $collection): Collection => $collection->prepend(0)
             ));

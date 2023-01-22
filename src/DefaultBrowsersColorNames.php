@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace OndrejVrto\LineChart;
 
 class DefaultBrowsersColorNames {
-
     /** @var array<string,string> */
     private array $colors = [
         "aliceblue"            => "#f0f8ff",
