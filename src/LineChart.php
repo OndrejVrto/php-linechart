@@ -17,14 +17,14 @@ final class LineChart implements Stringable {
     /** @var Collection<int,float> */
     private Collection $cleanData;
 
-    /** @param array<mixed> $data */
+    /** @param null|array<mixed> $data */
     public function __construct(
-        private readonly array $data
+        private readonly ?array $data
     ) {
     }
 
-    /** @param array<mixed> $data */
-    public static function new(array $data): self {
+    /** @param null|array<mixed> $data */
+    public static function new(?array $data): self {
         return new self($data);
     }
 
@@ -73,7 +73,10 @@ final class LineChart implements Stringable {
 
     public function resolvePoints(): string {
         return $this->cleanData
-            ->map(fn (float $value, int $key): string => sprintf("%d %h", $key, $value))
+            ->map(function (int|float $value, int $key): string {
+                $format = is_int($value) ? '%d' : '%01.2f';
+                return sprintf("%d {$format}", $key, $value);
+            })
             ->implode(' ');
     }
 
@@ -112,7 +115,16 @@ final class LineChart implements Stringable {
     private function cleanInputData(): Collection {
         $tmp = collect($this->data)
             ->flatten()
-            ->filter(fn ($value) => is_numeric($value) || (is_string($value) && ctype_digit($value)) || is_bool($value))
+            ->map(function (mixed $value): int|float|null {
+                return match(true){
+                    is_int($value) => (int) $value,
+                    is_bool($value) => (int) $value,
+                    is_numeric($value) => (float) $value,
+                    (is_string($value) && ctype_digit($value)) => (float) $value,
+                    default => null,
+                };
+            })
+            ->whereNotNull()
             ->when(
                 $this->reverseOrder,
                 fn (Collection $collection): Collection => $collection->reverse()
@@ -125,11 +137,7 @@ final class LineChart implements Stringable {
             ->pipe(fn(Collection $collection): Collection => $collection->when(
                 1 === $collection->count(),
                 fn (Collection $collection): Collection => $collection->prepend(0)
-            ))
-            ->map(function ($value): float {
-                /** @var int|float|bool|numeric-string $value */
-                return (float) $value;
-            });
+            ));
 
         /** @var float */
         $min = $tmp->min();
@@ -137,7 +145,7 @@ final class LineChart implements Stringable {
         return $tmp
             ->when(
                 $min < 0,
-                fn (Collection $collection): Collection => $collection->map(fn (float $value): float => $value - $min)
+                fn (Collection $collection): Collection => $collection->map(fn (int|float $value): int|float => $value - $min)
             )
             ->values();
     }
