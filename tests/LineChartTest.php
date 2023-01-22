@@ -139,12 +139,16 @@ test('color in format', function (string $color): void {
 
     $this->assertStringContainsString('stop-color="#0000ff"', $svg);
 })->with([
+    'text' => 'blue',
     'hex'  => '#0000ff',
     'rgb'  => 'rgb(0, 0, 255)',
-    'rgba' => 'rgba(0, 0, 255, 1)',
-    'hsla' => 'hsla(240, 100%, 50%, 1)',
+    'rgba' => 'rgba(0, 0, 255, 1.0)',
     'hsl'  => 'hsl(240, 100%, 50%)',
-    'default browser text' => 'blue',
+    'hsla' => 'hsla(240, 100%, 50%, 1.0)',
+    'cmyk' => 'cmyk(100%,100%,0%,0%)',
+    'xyz'  => 'xyz(18.05,7.22,95.05)',
+    // 'hsb'    => 'hsb(241, 100%, 50%)',        // also possible
+    // 'CIELab' => 'CIELab(32.3,79.2,-107.86)',  // also possible
 ]);
 
 test('setting the default value if a non-existent color format is required', function (): void {
