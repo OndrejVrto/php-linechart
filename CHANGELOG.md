@@ -1,4 +1,4 @@
 # Changelog
 
-All notable changes to `linechart` will be documented in this file.
+All notable changes to `php-linechart` will be documented in this file.
 

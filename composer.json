@@ -1,11 +1,14 @@
 {
-    "name": "ondrej-vrto/linechart",
-    "description": "Generate simple linechart SVGs in PHP",
+    "name": "ondrej-vrto/php-linechart",
+    "description": "Generates a simple line chart in SVG format using PHP.",
     "keywords": [
-        "ondrej-vrto",
-        "linechart"
+        "ondrej vrto",
+        "line chart",
+        "line graph",
+        "svg",
+        "color"
     ],
-    "homepage": "https://github.com/ondrej-vrto/linechart",
+    "homepage": "https://github.com/ondrej-vrto/php-linechart",
     "license": "MIT",
     "authors": [
         {
