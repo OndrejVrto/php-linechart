@@ -17,14 +17,14 @@ final class LineChart implements Stringable {
     /** @var Collection<int,float> */
     private Collection $cleanData;
 
-    /** @param null|array<mixed> $data */
+    /** @param null|array<mixed>|Collection<mixed> $data */
     public function __construct(
-        private readonly ?array $data
+        private readonly null|array|Collection $data
     ) {
     }
 
-    /** @param null|array<mixed> $data */
-    public static function new(?array $data): self {
+    /** @param null|array<mixed>|Collection<mixed> $data */
+    public static function new(null|array|Collection $data): self {
         return new self($data);
     }
 
