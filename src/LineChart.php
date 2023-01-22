@@ -14,7 +14,7 @@ use Spatie\Color\Exceptions\InvalidColorValue;
 final class LineChart implements Stringable {
     use LineChartSetters;
 
-    /** @var Collection<int,float> */
+    /** @var Collection<int,int|float> */
     private Collection $cleanData;
 
     /** @param null|array<mixed>|Collection<mixed> $data */
@@ -111,9 +111,9 @@ final class LineChart implements Stringable {
             });
     }
 
-    /** @return Collection<int,float> */
+    /** @return Collection<int,int|float> */
     private function cleanInputData(): Collection {
-        $tmp = collect($this->data)
+        return collect($this->data)
             ->flatten()
             ->map(function (mixed $value): int|float|null {
                 return match (true) {
@@ -129,25 +129,36 @@ final class LineChart implements Stringable {
                 $this->reverseOrder,
                 fn (Collection $collection): Collection => $collection->reverse()
             )
-            ->unless(
-                null === $this->maxItemAmount,
-                fn (Collection $collection): Collection => $collection->take($this->maxItemAmount ?? $collection->count())
-            )
-            ->whenEmpty(fn (Collection $collection) => $collection->push(0, 0))
-            ->pipe(fn (Collection $collection): Collection => $collection->when(
-                1 === $collection->count(),
-                fn (Collection $collection): Collection => $collection->prepend(0)
-            ));
+            ->pipe(function (Collection $collection): Collection {
+                $count = $collection->count();
+                $max   = $this->maxItemAmount;
+                $diff  = $count - $max;
 
-        /** @var float */
-        $min = $tmp->min();
+                return match(true) {
+                    0 === $count  => $collection->push(0, 0),
+                    1 === $count  => $collection->prepend(0),
+                    2 === $count  => $collection,
+                    null === $max => $collection,
+                    0 === $diff   => $collection,
+                    $diff > 0     => $collection->take(max(2, $max)),
+                    default       => $collection->pad($max, 0)
+                };
+            })
+            ->pipe(function (Collection $collection): Collection {
+                $min = $collection->min();
 
-        return $tmp
-            ->when(
-                $min < 0,
-                fn (Collection $collection): Collection => $collection->map(fn (int|float $value): int|float => $value - $min)
-            )
-            ->values();
+                return is_numeric($min) && $min < 0
+                    ? $collection->map(fn (mixed $value): int|float => $value - $min)
+                    : $collection;
+            })
+            ->values()
+            ->map(function (mixed $value): int|float {
+                return match (true) {
+                    is_int($value) => (int) $value,
+                    is_numeric($value) => (float) $value,
+                    default => throw new \Exception("Bad Value"),
+                };
+            });
     }
 
     public function __toString(): string {
