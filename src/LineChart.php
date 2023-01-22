@@ -8,6 +8,8 @@ use stdClass;
 use Stringable;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Collection;
+use Spatie\Color\Factory as ColorFactory;
+use Spatie\Color\Exceptions\InvalidColorValue;
 
 final class LineChart implements Stringable {
     use LineChartSetters;
@@ -78,7 +80,15 @@ final class LineChart implements Stringable {
     /** @return Collection<int,stdClass> */
     private function resolveColors(): Collection {
         return collect($this->colors)
-            ->filter(fn ($value) => 1 === preg_match("/^#([a-f0-9]{6}|[a-f0-9]{3})$/i", $value))
+            ->map(function ($value) {
+                try {
+                    return (string) ColorFactory::fromString($value)->toHex();
+                } catch (InvalidColorValue) {
+                }
+
+                return DefaultBrowsersColorNames::hexOrNull($value);
+            })
+            ->whereNotNull()
             ->whenEmpty(fn (Collection $collection): Collection => $collection->push(...$this->defaultColors))
             ->values()
             ->pipe(function (Collection $collection): Collection {
