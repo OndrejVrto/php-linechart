@@ -41,7 +41,7 @@ final class LineChart implements Stringable {
 
         $widthSvg = $this->widthSvg;
         $heightSvg = $this->heightSvg;
-        $strokeWidth = $this->strokeWidth;
+        $strokeWidth = round($this->strokeWidth, 4);
 
         $widthScale = round(($widthSvg - $strokeWidth) / $widthRaw, 4);
         $heightScale = round(($heightSvg - $strokeWidth) / $heightRaw, 4);
@@ -114,7 +114,7 @@ final class LineChart implements Stringable {
             ->flatten()
             ->filter(fn ($value) => is_numeric($value) || (is_string($value) && ctype_digit($value)) || is_bool($value))
             ->when(
-                true === $this->reverseOrder,
+                $this->reverseOrder,
                 fn (Collection $collection): Collection => $collection->reverse()
             )
             ->unless(
@@ -122,13 +122,11 @@ final class LineChart implements Stringable {
                 fn (Collection $collection): Collection => $collection->take($this->maxItemAmount ?? $collection->count())
             )
             ->whenEmpty(fn (Collection $collection) => $collection->push(0, 0))
-            ->pipe(function (Collection $collection): Collection {
-                return $collection->when(
-                    1 === $collection->count(),
-                    fn (Collection $collection): Collection => $collection->prepend(0)
-                );
-            })
-            ->map(function (mixed $value): float {
+            ->pipe(fn(Collection $collection): Collection => $collection->when(
+                1 === $collection->count(),
+                fn (Collection $collection): Collection => $collection->prepend(0)
+            ))
+            ->map(function ($value): float {
                 /** @var int|float|bool|numeric-string $value */
                 return (float) $value;
             });
