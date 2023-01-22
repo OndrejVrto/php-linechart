@@ -79,7 +79,7 @@ final class LineChart implements Stringable {
     private function resolveColors(): Collection {
         return collect($this->colors)
             ->filter(fn ($value) => 1 === preg_match("/^#([a-f0-9]{6}|[a-f0-9]{3})$/i", $value))
-            ->whenEmpty(fn (Collection $collection) => $collection->push(...$this->defaultColors))
+            ->whenEmpty(fn (Collection $collection): Collection => $collection->push(...$this->defaultColors))
             ->values()
             ->pipe(function (Collection $collection): Collection {
                 $count = $collection->count();
@@ -88,9 +88,9 @@ final class LineChart implements Stringable {
                     : 100 / ($count - 1);
 
                 return $collection
-                    ->map(function (string $colorString, int $key) use ($step) {
+                    ->map(function (mixed $colorHex, int $key) use ($step) {
                         $color = new stdClass();
-                        $color->code = mb_strtolower($colorString);
+                        $color->code = is_string($colorHex) ? mb_strtolower($colorHex) : '';
                         $color->offset = sprintf("%01.02h", ceil($key * $step) / 100);
 
                         return $color;
@@ -100,9 +100,17 @@ final class LineChart implements Stringable {
 
     /** @return Collection<int,float> */
     private function cleanInputData(): Collection {
-        return collect($this->data)
+        $tmp = collect($this->data)
             ->flatten()
             ->filter(fn ($value) => is_numeric($value) || (is_string($value) && ctype_digit($value)) || is_bool($value))
+            ->when(
+                true === $this->reverseOrder,
+                fn (Collection $collection): Collection => $collection->reverse()
+            )
+            ->unless(
+                null === $this->maxItemAmount,
+                fn (Collection $collection): Collection => $collection->take($this->maxItemAmount ?? $collection->count())
+            )
             ->whenEmpty(fn (Collection $collection) => $collection->push(0, 0))
             ->pipe(function (Collection $collection): Collection {
                 return $collection->when(
@@ -110,27 +118,19 @@ final class LineChart implements Stringable {
                     fn (Collection $collection): Collection => $collection->prepend(0)
                 );
             })
-            ->map(function ($value): float {
+            ->map(function (mixed $value): float {
                 /** @var int|float|bool|numeric-string $value */
                 return (float) $value;
-            })
-            ->when(
-                true === $this->reverseOrder,
-                fn (Collection $collection): Collection => $collection->reverse()
-            )
-            ->unless(
-                null === $this->maxItemAmount,
-                fn (Collection $collection): Collection => $collection->shift($this->maxItemAmount)
-            )
-            ->pipe(function (Collection $collection): Collection {
-                /** @var float */
-                $min = $collection->min();
+            });
 
-                return $collection->when(
-                    $min < 0,
-                    fn (Collection $collection): Collection => $collection->map(fn ($value) => $value - $min)
-                );
-            })
+        /** @var float */
+        $min = $tmp->min();
+
+        return $tmp
+            ->when(
+                $min < 0,
+                fn (Collection $collection): Collection => $collection->map(fn (float $value): float => $value - $min)
+            )
             ->values();
     }
 
