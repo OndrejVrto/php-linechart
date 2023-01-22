@@ -41,7 +41,7 @@ final class LineChart implements Stringable {
 
         $widthSvg = $this->widthSvg;
         $heightSvg = $this->heightSvg;
-        $strokeWidth = round($this->strokeWidth, 4);
+        $strokeWidth = round($this->strokeWidth, 2);
 
         $widthScale = round(($widthSvg - $strokeWidth) / $widthRaw, 4);
         $heightScale = round(($heightSvg - $strokeWidth) / $heightRaw, 4);

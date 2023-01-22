@@ -30,7 +30,7 @@ test('set stroke to long float value', function (): void {
         ->withStrokeWidth(10.5555555555)
         ->make();
 
-    $this->assertStringContainsString('stroke-width="10.5556"', $svg);
+    $this->assertStringContainsString('stroke-width="10.56"', $svg);
 });
 
 test('set stroke to negative value', function (): void {
