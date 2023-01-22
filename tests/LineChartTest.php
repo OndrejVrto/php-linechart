@@ -69,7 +69,7 @@ test('input data conversion', function (mixed $input, string $result): void {
         collect([1, 2, 3]),
         '0 1 1 2 2 3'
     ],
-])->only();
+]);
 
 it('default four colors', function (): void {
     $svg = LineChart::new([0, 1, 2, 3, 4])->make();
