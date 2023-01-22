@@ -9,9 +9,6 @@ use OndrejVrto\LineChart\LineChart;
 | Test Case
 |--------------------------------------------------------------------------
 */
-uses()
-    ->beforeEach(fn () => $this->lineChart = LineChart::new([0, 1, 2, 3, 4]))
-    ->in('LineChartTest.php');
 
 /*
 |--------------------------------------------------------------------------

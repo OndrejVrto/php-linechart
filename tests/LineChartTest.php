@@ -11,7 +11,7 @@ test('stringable interface', function (): void {
 });
 
 it('create svg from static method', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->make();
 
     $this->assertStringContainsString('<svg', $svg);
@@ -19,14 +19,14 @@ it('create svg from static method', function (): void {
 });
 
 it('default stroke', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->make();
 
     $this->assertStringContainsString('stroke-width="2"', $svg);
 });
 
 test('set stroke to long float value', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withStrokeWidth(10.5555555555)
         ->make();
 
@@ -34,7 +34,7 @@ test('set stroke to long float value', function (): void {
 });
 
 test('set stroke to negative value', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withStrokeWidth(-5)
         ->make();
 
@@ -42,7 +42,7 @@ test('set stroke to negative value', function (): void {
 });
 
 test('lock Y axis', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withStrokeWidth(20)  // set stroke to 20 for preety scale number
         ->withLockYAxisRange(10)
         ->make();
@@ -51,7 +51,7 @@ test('lock Y axis', function (): void {
 });
 
 test('cut down on the number of items', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withMaxItemAmount(3)
         ->make();
 
@@ -59,7 +59,7 @@ test('cut down on the number of items', function (): void {
 });
 
 test('cut down the number of items if the list is short', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withMaxItemAmount(10)
         ->make();
 
@@ -67,7 +67,7 @@ test('cut down the number of items if the list is short', function (): void {
 });
 
 test('order reversed set to true', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withOrderReversed()
         ->make();
 
@@ -75,7 +75,7 @@ test('order reversed set to true', function (): void {
 });
 
 test('cut down the number of reversed items', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withOrderReversed()
         ->withMaxItemAmount(3)
         ->make();
@@ -84,7 +84,7 @@ test('cut down the number of reversed items', function (): void {
 });
 
 it('default size', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->make();
 
     $this->assertStringContainsString('viewBox="0 0 200 30"', $svg);
@@ -93,7 +93,7 @@ it('default size', function (): void {
 });
 
 test('change sizes', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withDimensions(1000, 100)
         ->make();
 
@@ -103,7 +103,7 @@ test('change sizes', function (): void {
 });
 
 test('change only the width using a negative float number', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withDimensions(-333.1234)
         ->make();
 
@@ -113,7 +113,7 @@ test('change only the width using a negative float number', function (): void {
 });
 
 it('default four colors', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->make();
 
     $this->assertStringContainsString('<stop stop-color="#fbd808" offset="0"></stop>', $svg);
@@ -123,7 +123,7 @@ it('default four colors', function (): void {
 });
 
 test('three color in default browser text format', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withColorGradient('Green', 'Orange', 'Red')
         ->make();
 
@@ -133,7 +133,7 @@ test('three color in default browser text format', function (): void {
 });
 
 test('color in format', function (string $color): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withColorGradient($color)
         ->make();
 
@@ -148,7 +148,7 @@ test('color in format', function (string $color): void {
 ]);
 
 test('setting the default value if a non-existent color format is required', function (): void {
-    $svg = $this->lineChart
+    $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withColorGradient('foo', 'bar')
         ->make();
 
