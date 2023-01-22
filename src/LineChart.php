@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OndrejVrto\LineChart;
 
 use stdClass;
+use Exception;
 use Stringable;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Collection;
@@ -115,14 +116,12 @@ final class LineChart implements Stringable {
     private function cleanInputData(): Collection {
         return collect($this->data)
             ->flatten()
-            ->map(function (mixed $value): int|float|null {
-                return match (true) {
-                    is_int($value) => (int) $value,
-                    is_bool($value) => (int) $value,
-                    is_numeric($value) => (float) $value,
-                    (is_string($value) && ctype_digit($value)) => (float) $value,
-                    default => null,
-                };
+            ->map(fn (mixed $value): int|float|null => match (true) {
+                is_int($value)     => (int) $value,
+                is_bool($value)    => (int) $value,
+                is_numeric($value) => (float) $value,
+                (is_string($value) && ctype_digit($value)) => (float) $value,
+                default => null,
             })
             ->whereNotNull()
             ->when(
@@ -134,7 +133,7 @@ final class LineChart implements Stringable {
                 $max   = $this->maxItemAmount;
                 $diff  = $count - $max;
 
-                return match(true) {
+                return match (true) {
                     0 === $count  => $collection->push(0, 0),
                     1 === $count  => $collection->prepend(0),
                     2 === $count  => $collection,
@@ -152,12 +151,10 @@ final class LineChart implements Stringable {
                     : $collection;
             })
             ->values()
-            ->map(function (mixed $value): int|float {
-                return match (true) {
-                    is_int($value) => (int) $value,
-                    is_numeric($value) => (float) $value,
-                    default => throw new \Exception("Bad Value"),
-                };
+            ->map(fn (mixed $value): int|float => match (true) {
+                is_int($value)     => (int) $value,
+                is_numeric($value) => (float) $value,
+                default            => throw new Exception(),
             });
     }
 
