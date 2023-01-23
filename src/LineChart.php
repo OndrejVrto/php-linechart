@@ -77,14 +77,14 @@ final class LineChart implements Stringable {
         /** @var positive-int */
         $maxKey = $this->cleanData->keys()->pop();
 
-        return max(1, (int) $maxKey);
+        return (int) max(1, $maxKey);
     }
 
     private function resolveHeight(): float {
         /** @var float */
-        $max = $this->cleanData->max();
+        $max = $this->lockValueY ?? $this->cleanData->max();
 
-        return $this->lockValueY ?? $max;
+        return (float) max(1, $max);
     }
 
     private function resolvePoints(): string {
