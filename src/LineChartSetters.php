@@ -23,6 +23,9 @@ trait LineChartSetters {
     /** @var string[] */
     private array $defaultColors = ['#fbd808', '#ff9005', '#f9530b', '#ff0000'];
 
+    /**
+     * Will determine the width and height of the rendered SVG.
+     */
     public function withDimensions(mixed $widthSvg = null, mixed $heightSvg = null): self {
         $clone = clone $this;
         $clone->widthSvg = $this->positiveIntOrNull($widthSvg) ?? $clone->widthSvg;
@@ -31,6 +34,9 @@ trait LineChartSetters {
         return $clone;
     }
 
+    /**
+     * Will determine the stroke's width
+     */
     public function withStrokeWidth(mixed $strokeWidth = null): self {
         $clone = clone $this;
         $clone->strokeWidth = $this->positiveFloatOrNull($strokeWidth) ?? $clone->strokeWidth;
@@ -38,6 +44,11 @@ trait LineChartSetters {
         return $clone;
     }
 
+    /**
+     * Sets the maximum value of the vertical axis. This is useful if you have
+     * multiple charts that should have the same length vertical scale.
+     * By default, the maximum value is determined based on the input values.
+     */
     public function withLockYAxisRange(mixed $lockValueY = null): self {
         $clone = clone $this;
         $clone->lockValueY = $this->positiveFloatOrNull($lockValueY) ?? $clone->lockValueY;
@@ -45,6 +56,9 @@ trait LineChartSetters {
         return $clone;
     }
 
+    /**
+     * Reverses the order of values
+     */
     public function withOrderReversed(): self {
         $clone = clone $this;
         $clone->reverseOrder = true;
@@ -52,6 +66,12 @@ trait LineChartSetters {
         return $clone;
     }
 
+    /**
+     * Will determine how many values will be shown. If you originally passed
+     * on more values than this max, then the oldest ones will be omitted.
+     * If the max amount is set to a number that's higher than the current amount,
+     * then the graph will extended.
+     */
     public function withMaxItemAmount(mixed $maxItemAmount = null): self {
         $clone = clone $this;
         $clone->maxItemAmount = $this->positiveIntOrNull($maxItemAmount) ?? $clone->maxItemAmount;
@@ -59,6 +79,9 @@ trait LineChartSetters {
         return $clone;
     }
 
+    /**
+     * You can choose any number of colors. A gradient for the graph is automatically generated from them.
+     */
     public function withColorGradient(string ...$colorsInHex): self {
         $clone = clone $this;
         $clone->colors = $colorsInHex;

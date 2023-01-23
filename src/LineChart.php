@@ -24,11 +24,22 @@ final class LineChart implements Stringable {
     ) {
     }
 
-    /** @param null|array<mixed>|Collection<mixed> $data */
+    /**
+     * Static instance this class
+     *
+     * @param null|array<mixed>|Collection<mixed> $data
+     * @return self
+     */
     public static function new(null|array|Collection $data): self {
         return new self($data);
     }
 
+    /**
+     * Create SVG string from input data
+     *
+     * @throws Exception
+     * @return string
+     */
     public function make(): string {
         $this->cleanData = $this->cleanInputData();
 
@@ -55,7 +66,11 @@ final class LineChart implements Stringable {
         $svg = ob_get_contents();
         ob_end_clean();
 
-        return is_string($svg) ? $svg : '';
+        if (false === $svg) {
+            throw new Exception("Output buffering isn't active");
+        }
+
+        return $svg;
     }
 
     private function resolveWidth(): int {
@@ -69,10 +84,10 @@ final class LineChart implements Stringable {
         /** @var float */
         $max = $this->lockValueY ?? $this->cleanData->max();
 
-        return max(1, (int) $max);
+        return (int) max(1, ceil($max));
     }
 
-    public function resolvePoints(): string {
+    private function resolvePoints(): string {
         return $this->cleanData
             ->map(function (int|float $value, int $key): string {
                 $format = is_int($value) ? '%d' : '%01.2f';
@@ -81,7 +96,9 @@ final class LineChart implements Stringable {
             ->implode(' ');
     }
 
-    /** @return Collection<int,stdClass> */
+    /**
+     * @return Collection<int,stdClass>
+     */
     private function resolveColors(): Collection {
         return collect($this->colors)
             ->map(function ($value) {
@@ -112,7 +129,9 @@ final class LineChart implements Stringable {
             });
     }
 
-    /** @return Collection<int,int|float> */
+    /**
+     * @return Collection<int,int|float>
+     */
     private function cleanInputData(): Collection {
         return collect($this->data)
             ->flatten()

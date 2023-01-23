@@ -150,6 +150,12 @@ class DefaultBrowsersColorNames {
         "yellowgreen"          => "#9acd32",
     ];
 
+    /**
+     * Get hex color for default browser color name
+     *
+     * @param mixed $value
+     * @return string|null
+     */
     public static function hexOrNull(mixed $value): ?string {
         return (new self())->getHex($value) ?: null;
     }
