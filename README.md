@@ -69,7 +69,7 @@ $data = ["0", "002", "4.05"];  // numbers in string
 $data = collect([0, 1, 2, 3]); // Illuminate\Support\Collection from Laravel
 $data = [5];                   // one value => prepend zero value
 $data = [];                    // empty array => set two zero value
-$data = [null];    	           // null => set two zero value
+$data = [null];                // null => set two zero value
 ```
 
 It is possible to use the spread operator and insert values individually.
@@ -87,7 +87,7 @@ $collection = WebVisits::query()
     ->orderByDesc('date')
     ->limit(365)
     ->get()
-	->pluck('day_visit_count');
+    ->pluck('day_visit_count');
 
 $svg = LineChart::new($collection)->make();
 ```
