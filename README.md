@@ -1,7 +1,7 @@
 # Generates a simple line chart in SVG format using PHP
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ondrej-vrto/php-linechart.svg?style=flat-square)](https://packagist.org/packages/ondrej-vrto/php-linechart)
-[![Tests](https://img.shields.io/github/actions/workflow/status/ondrej-vrto/php-linechart/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/OndrejVrto/php-linechart/blob/main/.github/workflows/run-tests.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/OndrejVrto/php-linechart/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/OndrejVrto/php-linechart/blob/main/.github/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/ondrej-vrto/php-linechart.svg?style=flat-square)](https://packagist.org/packages/ondrej-vrto/php-linechart)
 
 ## Installation
