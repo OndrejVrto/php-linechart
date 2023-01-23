@@ -8,14 +8,14 @@
         "svg",
         "color"
     ],
-    "homepage": "https://github.com/ondrej-vrto/php-linechart",
+    "homepage": "https://github.com/OndrejVrto/php-linechart",
     "license": "MIT",
     "authors": [
         {
+            "role": "Developer",
             "name": "Ondrej Vrťo",
             "email": "ondrej.vrto@gmail.com",
-            "homepage": "https://ondrejvrto.eu",
-            "role": "Developer"
+            "homepage": "https://ondrejvrto.eu"
         }
     ],
     "require": {
