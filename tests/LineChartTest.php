@@ -17,9 +17,11 @@ test('stringable interface', function (): void {
 });
 
 test('input data conversion', function (mixed $input, string $result): void {
-    $svg = LineChart::new($input)->make();
+    $svgArray = LineChart::new($input)->make();
+    $svgVariadic = LineChart::new(...$input)->make();
 
-    expect($svg)->toContain('points="'.$result.'"');
+    expect($svgArray)->toContain('points="'.$result.'"');
+    expect($svgVariadic)->toContain('points="'.$result.'"');
 })->with([
     'integer values greater than zero' => [
         [0, 1, 2, 3, 4],
@@ -58,7 +60,7 @@ test('input data conversion', function (mixed $input, string $result): void {
         '0 0 1 0'
     ],
     'null' => [
-        null,
+        [null],
         '0 0 1 0'
     ],
     'bad values' => [

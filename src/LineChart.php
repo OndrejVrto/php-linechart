@@ -18,27 +18,23 @@ final class LineChart implements Stringable {
     /** @var Collection<int,int|float> */
     private Collection $cleanData;
 
-    /** @param null|array<mixed>|Collection<mixed> $data */
+    /** @param array<mixed> $data */
     public function __construct(
-        private readonly null|array|Collection $data
+        private readonly array $data
     ) {
     }
 
     /**
-     * Static instance this class
-     *
-     * @param null|array<mixed>|Collection<mixed> $data
-     * @return self
+     * Serves for entering input values for creating a graph.
      */
-    public static function new(null|array|Collection $data): self {
-        return new self($data);
+    public static function new(mixed ...$values): self {
+        return new self([...$values]);
     }
 
     /**
-     * Create SVG string from input data
+     * Generates a string containing an svg image of a line graph.
      *
      * @throws Exception
-     * @return string
      */
     public function make(): string {
         $this->cleanData = $this->cleanInputData();
