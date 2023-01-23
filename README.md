@@ -1,3 +1,5 @@
+<p align="center"><img src="./.github/img/socialcard.png" alt="Social Card of PHP Line Chart"></p>
+
 # Generates a simple line chart in SVG format using PHP
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/ondrej-vrto/php-linechart.svg?style=flat-square)](https://packagist.org/packages/ondrej-vrto/php-linechart)
@@ -15,14 +17,14 @@ composer require ondrej-vrto/php-linechart
 ## Usage
 
 ```php
-$data = [0, 1, 2, 3, 3, 2, 1, 5, 4];
+$data = [0, 2, 1, 3, 3, 2, 1, 5, 4];
 
 $svg = LineChart::new($data)->make();
 ```
 
 Creates the following svg string
 
-```html
+```xml
 <svg viewBox="0 0 200 30" width="200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <linearGradient x2="0" y1="1" id="color-44dac552-0a1b-4b31-9c35-8bda05443b6f">
@@ -39,8 +41,8 @@ Creates the following svg string
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 vector-effect="non-scaling-stroke"
-                transform="scale(5.8235 -3.1111) translate(0.1717 -9.3214)"
-                points="0 0 1 1 2 2 3 3 4 3 5 2 6 1 7 5 8 4">
+                transform="scale(24.75 -5.6) translate(0.0404 -5.1786)"
+                points="0 0 1 2 2 1 3 3 4 3 5 2 6 1 7 5 8 4">
             </polyline>
         </mask>
     </defs>
@@ -54,7 +56,7 @@ Creates the following svg string
     </g>
 </svg>
 ```
-The generated svg looks something like this.
+The generated svg looks like this.
 
 ![](./.github/img/0.png)
 
@@ -66,17 +68,26 @@ $data = [true, false, true];   // booleans
 $data = ["0", "002", "4.05"];  // numbers in string
 $data = collect([0, 1, 2, 3]); // Illuminate\Support\Collection from Laravel
 $data = [5];                   // one value => prepend zero value
-$data = [];					   // empty array => set two zero value
-$data = null;      			   // null => set two zero value
+$data = [];                    // empty array => set two zero value
+$data = [null];    	           // null => set two zero value
 ```
-Example collection data
+
+It is possible to use the spread operator and insert values individually.
+
+```php
+$svg = LineChart::new(0, 1, 2, 3, 4, 5)->make();
+```
+
+Example data from Laravel Eloquent query.
+
 ```php
 $collection = WebVisits::query()
-	->select(['day_visit'])
-	->whereMorphedTo('visitable', $model)
-	->orderByDesc('date')
-	->limit(365)
-	->get();
+    ->select(['day_visit_count'])
+    ->whereMorphedTo('visitable', $model)
+    ->orderByDesc('date')
+    ->limit(365)
+    ->get()
+	->pluck('day_visit_count');
 
 $svg = LineChart::new($collection)->make();
 ```
@@ -85,12 +96,12 @@ $svg = LineChart::new($collection)->make();
 ```php
 $svg = LineChart::new($data)
     ->withStrokeWidth(5)
-	->withOrderReversed()
+    ->withOrderReversed()
     ->withMaxItemAmount(50)
-	->withLockYAxisRange(200)
+    ->withLockYAxisRange(200)
     ->withDimensions(500, 100)
-	->withColorGradient('Green', 'Orange', 'Red')
-	->make();
+    ->withColorGradient('Green', 'Orange', 'Red')
+    ->make();
 ```
 - **`withStrokeWidth`** will determine the stroke's width
 - **`withOrderReversed`** reverses the order of values
@@ -101,22 +112,22 @@ $svg = LineChart::new($data)
 
 #### Possible color value types for method withColorGradient()
 ```
-	text   :  Blue, Orange, Cyan, ...
-	hex    :  #0000ff, #eee, ... 
-	rgb    :  rgb(0, 0, 255)
-	rgba   :  rgba(0, 0, 255, 1.0)
-	hsl    :  hsl(240, 100%, 50%)
-	hsla   :  hsla(240, 100%, 50%, 1.0)
-	cmyk   :  cmyk(100%,100%,0%,0%)
-	xyz    :  xyz(18.05, 7.22, 95.05)
-	hsb    :  hsb(241, 100%, 50%)
+    text   :  Blue, Orange, Cyan, ...
+    hex    :  #0000ff, #eee, ...
+    rgb    :  rgb(0, 0, 255)
+    rgba   :  rgba(0, 0, 255, 1.0)
+    hsl    :  hsl(240, 100%, 50%)
+    hsla   :  hsla(240, 100%, 50%, 1.0)
+    cmyk   :  cmyk(100%,100%,0%,0%)
+    xyz    :  xyz(18.05, 7.22, 95.05)
+    hsb    :  hsb(241, 100%, 50%)
     CIELab :  CIELab(32.3, 79.2, -107.86)
 ```
 ***Color gradien example:***
 ```php
 $svg = LineChart::new($data)
-	->withColorGradient('rgb(48, 231, 237)', 'rgb(0, 166, 215)', 'rgb(0, 88, 179)', 'rgb(0, 27, 135)')
-	->make();
+    ->withColorGradient('rgb(48, 231, 237)', 'rgb(0, 166, 215)', 'rgb(0, 88, 179)', 'rgb(0, 27, 135)')
+    ->make();
 ```
 
 ![](./.github/img/1.png)

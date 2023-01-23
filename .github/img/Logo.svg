@@ -1,0 +1,29 @@
+<svg viewBox="0 0 350 300" width="350" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient x2="0" y1="1" id="color-3831b40c-aa93-4eee-9f7e-1fd5d478963e">
+            <stop stop-color="#fcb092" offset="0"></stop>
+            <stop stop-color="#fc6428" offset=".5"></stop>
+            <stop stop-color="#f84b06" offset="1"></stop>
+        </linearGradient>
+        <mask id="linechart-3831b40c-aa93-4eee-9f7e-1fd5d478963e">
+            <polyline
+                stroke="#fff"
+                stroke-width="40"
+                fill="transparent"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                vector-effect="non-scaling-stroke"
+                transform="scale(51.6667 -18.5714) translate(0.3871 -15.0769)"
+                points="0 0 1 5 2 2 3 7 4 4 5 9 6 14">
+            </polyline>
+        </mask>
+    </defs>
+    <g>
+        <rect
+            width="350"
+            height="300"
+            fill="url(#color-3831b40c-aa93-4eee-9f7e-1fd5d478963e)"
+            mask="url(#linechart-3831b40c-aa93-4eee-9f7e-1fd5d478963e)"
+        />
+    </g>
+</svg>

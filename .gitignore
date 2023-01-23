@@ -16,3 +16,4 @@ phpstan-baseline.neon
 # other
 TODO
 Makefile
+.github/img/socialcard.xcf
