@@ -6,7 +6,7 @@ namespace OndrejVrto\LineChart;
 
 class DefaultBrowsersColorNames {
     /** @var array<string,string> */
-    private array $colors = [
+    final public const COLORS = [
         "aliceblue"            => "#f0f8ff",
         "antiquewhite"         => "#faebd7",
         "aqua"                 => "#00ffff",
@@ -152,9 +152,6 @@ class DefaultBrowsersColorNames {
 
     /**
      * Get hex color for default browser color name
-     *
-     * @param mixed $value
-     * @return string|null
      */
     public static function hexOrNull(mixed $value): ?string {
         return (new self())->getHex($value) ?: null;
@@ -164,7 +161,7 @@ class DefaultBrowsersColorNames {
         $value = $this->prepareValue($value);
 
         return $this->check($value)
-            ? $this->colors[$value]
+            ? self::COLORS[$value]
             : false;
     }
 
@@ -175,6 +172,6 @@ class DefaultBrowsersColorNames {
     }
 
     private function check(string $value): bool {
-        return array_key_exists($value, $this->colors);
+        return array_key_exists($value, self::COLORS);
     }
 }
