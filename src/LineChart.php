@@ -97,6 +97,7 @@ final class LineChart implements Stringable {
      */
     private function resolveColors(): Collection {
         return collect($this->colors)
+            ->whereNotNull()
             ->map(function ($value) {
                 try {
                     return (string) ColorFactory::fromString($value)->toHex();

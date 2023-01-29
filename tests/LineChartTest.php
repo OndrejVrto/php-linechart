@@ -86,6 +86,15 @@ it('default four colors', function (): void {
     expect($svg)->toContain('<stop stop-color="#ff0000" offset="1"></stop>');
 });
 
+it('default four colors if is set null', function (): void {
+    $svg = LineChart::new([0, 1, 2, 3, 4])->withColorGradient(null)->make();
+
+    expect($svg)->toContain('<stop stop-color="#fbd808" offset="0"></stop>');
+    expect($svg)->toContain('<stop stop-color="#ff9005" offset="0.34"></stop>');
+    expect($svg)->toContain('<stop stop-color="#f9530b" offset="0.67"></stop>');
+    expect($svg)->toContain('<stop stop-color="#ff0000" offset="1"></stop>');
+});
+
 test('three color in default browser text format', function (): void {
     $svg = LineChart::new([0, 1, 2, 3, 4])
         ->withColorGradient('Green', 'Orange', 'Red')
@@ -231,6 +240,14 @@ test('order reversed set to true', function (): void {
         ->make();
 
     expect($svg)->toContain('points="0 4 1 3 2 2 3 1 4 0"');
+});
+
+test('order reversed set to false', function (): void {
+    $svg = LineChart::new([0, 1, 2, 3, 4])
+        ->withOrderReversed(false)
+        ->make();
+
+    expect($svg)->toContain('points="0 0 1 1 2 2 3 3 4 4"');
 });
 
 test('cut down the number of reversed items', function (): void {

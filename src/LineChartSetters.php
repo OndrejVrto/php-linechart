@@ -18,7 +18,7 @@ trait LineChartSetters {
     private ?float $lockValueY = null;
 
     /** @var string[] */
-    private array $colors = [];
+    private ?array $colors = null;
 
     /** @var string[] */
     private array $defaultColors = ['#fbd808', '#ff9005', '#f9530b', '#ff0000'];
@@ -59,9 +59,9 @@ trait LineChartSetters {
     /**
      * Reverses the order of values
      */
-    public function withOrderReversed(): self {
+    public function withOrderReversed(bool $status = true): self {
         $clone = clone $this;
-        $clone->reverseOrder = true;
+        $clone->reverseOrder = $status;
 
         return $clone;
     }
@@ -82,7 +82,7 @@ trait LineChartSetters {
     /**
      * You can choose any number of colors. A gradient for the graph is automatically generated from them.
      */
-    public function withColorGradient(string ...$colorsInHex): self {
+    public function withColorGradient(?string ...$colorsInHex): self {
         $clone = clone $this;
         $clone->colors = $colorsInHex;
 
