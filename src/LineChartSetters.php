@@ -17,7 +17,7 @@ trait LineChartSetters {
 
     private ?float $lockValueY = null;
 
-    /** @var string[] */
+    /** @var array<int|string,string|null>|null */
     private ?array $colors = null;
 
     /** @var string[] */

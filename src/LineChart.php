@@ -100,7 +100,9 @@ final class LineChart implements Stringable {
             ->whereNotNull()
             ->map(function ($value) {
                 try {
-                    return (string) ColorFactory::fromString($value)->toHex();
+                    if (null !== $value) {
+                        return (string) ColorFactory::fromString($value)->toHex();
+                    }
                 } catch (InvalidColorValue) {
                 }
 
