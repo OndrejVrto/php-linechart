@@ -46,10 +46,14 @@
             "sort_algorithm": "length"
         },
         "blank_line_after_opening_tag": true,
-        "braces": {
-            "position_after_functions_and_oop_constructs": "same",
-            "position_after_anonymous_constructs": "same",
-            "position_after_control_structures": "same"
+        "control_structure_braces": true,
+        "control_structure_continuation_position": {
+            "position": "same_line"
+        },
+        "curly_braces_position": {
+            "classes_opening_brace": "same_line",
+            "functions_opening_brace": "same_line"
         }
+
     }
 }
